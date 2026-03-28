@@ -2,7 +2,7 @@ import pandas as pd
 import os
 from sklearn.datasets import fetch_california_housing
 
-def load_data(data_path="data/raw/train.csv"):
+def load_data(data_path="data/raw/house_prices.csv"):
     """
     Loads the dataset from the given path.
     If the dataset does not exist, it downloads the California Housing dataset
