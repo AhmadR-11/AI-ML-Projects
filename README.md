@@ -1,97 +1,163 @@
-# 🧠 AI & Machine Learning Projects Portfolio
+# AI & Machine Learning Projects
 
-Welcome to my central repository for Artificial Intelligence and Machine Learning architecture! This repository serves as a growing portfolio of my end-to-end ML engineering—from data mathematics and algorithmic preprocessing to deploying full-stack Model Ensembles and UI integrations.
-
----
-
-## 📂 Projects Overview
-
-Below is an index of the advanced ML platforms constructed in this repository:
-
-### 1. [House Price Prediction (AutoML Edition) 🏡](./House%20Price%20Prediction/)
-A heavily optimized, robust Kaggle-Level Machine Learning pipeline built to predict continuous targets (like Real Estate prices). It features an interactive **Streamlit Grandmaster Algorithm** that dynamically trains, benchmarks, and tests advanced gradient-boosted algorithms iteratively on any generic dataset instantly.
+A curated collection of end-to-end machine learning projects covering both **regression** and **classification** workflows. Each project demonstrates a complete pipeline — from exploratory data analysis and feature engineering through model training, evaluation, and deployment.
 
 ---
 
-## 🚀 Deep Dive: Project 1 - Kaggle-Tier AutoML Platform
+## Projects
 
-While initially designed strictly for classical House Price datasets, this project was refactored into a **Generic Top-20% Kaggle Tier AutoML Engine**. The platform empowers users to upload *any* CSV dataset, select a computational Target, and watch the system physically deploy elite Machine Learning algorithms (XGBoost, LightGBM, and Ensembled Voting Stacks) fully autonomously.
-
-### 🌟 Key Mathematical Features
-* **Gradient Boosting & Stacking**: Autonomously fuses `XGBoost`, `LightGBM`, and `Ridge` Regression structures together using an optimized `VotingRegressor` algorithm, mechanically canceling out individual algorithm weaknesses.
-* **Skew Transformation Matrices**: Evaluates massive mathematical variance globally. If the target column is right-skewed >0.75, it instantly converts it utilizing Inverse `np.log1p` calculations to protect standard deviation continuity.
-* **Automatic Inference Imputation**: Completely resolves empty row data anomalies using structural Medians & categorical Modes dynamically without bleeding standard-deviation variance.
-* **Dynamic Pipeline Roadmap**: The web interface visualizes the literal algorithmic timeline exactly as it operates inside your MacOS CPU, printing operations in real-time.
+| # | Project | Type | Stack | Interface |
+|---|---------|------|-------|-----------|
+| 1 | [House Price Prediction](./House%20Price%20Prediction/) | Regression | XGBoost · LightGBM · Ridge · Random Forest · Ensemble | Streamlit Web App + CLI |
+| 2 | [Iris Flower Classification](./Iris-Flower-Classification/) | Classification | Logistic Regression · KNN · SVM · Decision Tree · Random Forest | Jupyter Notebook |
 
 ---
 
-### 🏗️ Complete Directory Structure
-```text
+## 1 · House Price Prediction
+
+An automated regression pipeline that accepts any CSV dataset, performs intelligent preprocessing, trains multiple gradient-boosted models, and ranks them on a live leaderboard. The best model is persisted and served through an interactive prediction interface.
+
+### Highlights
+
+- **Ensemble Stacking** — Combines XGBoost, LightGBM, and Ridge Regression via a weighted `VotingRegressor` (45/45/10 split) to reduce individual model variance.
+- **Automatic Skew Correction** — Detects right-skewed targets (skewness > 0.75) and applies `log1p` transformation; reverses it at prediction time with `expm1`.
+- **Robust Preprocessing** — Median/mode imputation for missing values, Z-score outlier capping at ±3σ, per-feature log normalization, one-hot encoding with high-cardinality filtering.
+- **Feature Engineering** (CLI pipeline) — Derives domain features such as `TotalHouseAge`, `TotalSquareFootage`, and `TotalPorchArea` when applicable columns are present.
+- **Dual Execution Modes** — Streamlit web UI for interactive use; headless CLI pipeline with `GridSearchCV` hyperparameter tuning.
+
+### Directory Structure
+
+```
 House Price Prediction/
-│
-├── data/raw/              # Unmodified CSV datasets correctly loaded (train.csv, etc)
-├── models/                # Serialized architecture parameters and AI brain weights (.pkl)
-├── notebooks/             # Scratchpad Jupyter Notebooks for manual Exploratory Data Analysis (EDA)
-│
-├── src/                   # Procedural Python Terminal Pipeline (Classical Execution)
-│   ├── data_loader.py     # Pulls and validates datasets locally
-│   ├── preprocessing.py   # Cleans missing values, drops outliers, outputs matrix arrays
-│   ├── train_model.py     # Automates `GridSearchCV` hyperparameter tuning across 4 discrete algorithms
-│   └── evaluate.py        # Generates metrics (MAE, RMSE, R2 Score) and visual accuracy charts
-│
-├── visualizations/        # Standard Output directory for PNG regression charts from evaluate.py
-├── app.py                 # 🌟 Elite Streamlit Kaggle AutoML Web UI (The Main Event)
-├── main.py                # Console Pipeline Orchestrator Sequence
-├── requirements.txt       # Critical architecture dependencies (xgboost, lightgbm, etc.)
-└── README.md              # Project-level documentation
+├── app.py                  # Streamlit web application (train + predict)
+├── main.py                 # CLI pipeline orchestrator
+├── requirements.txt        # Python dependencies
+├── README.md               # Project-level documentation
+├── data/
+│   └── raw/                # Source CSV datasets
+├── models/                 # Serialized models, scalers, and metadata (.pkl)
+├── notebooks/
+│   └── 01_EDA.ipynb        # Exploratory data analysis notebook
+├── src/
+│   ├── data_loader.py      # Dataset loading (falls back to California Housing)
+│   ├── preprocessing.py    # Imputation, outlier capping, encoding, scaling
+│   ├── train_model.py      # Multi-model training with GridSearchCV
+│   ├── evaluate.py         # Benchmarking scorecard and winner analysis
+│   └── predict.py          # Sample predictions using the saved model
+└── visualizations/         # Generated charts (actual vs. predicted, residuals)
 ```
 
-### 🛠️ Installation & Architecture Build
+### Quick Start
 
-To run this platform locally via MacOS/Linux, execute the following strict terminal sequences:
-
-**1. Create & Activate a Virtual Environment:**
 ```bash
+# 1. Navigate to the project
 cd "House Price Prediction"
+
+# 2. Create and activate a virtual environment
 python3 -m venv venv
 source venv/bin/activate
-```
 
-**2. Install Core C++ Dependencies (Crucial for Mac):**
-Because XGBoost/LightGBM use C++ to execute extreme multithreading arrays, Mac OS requires you manually install OpenMP:
-```bash
+# 3. (macOS only) Install OpenMP for XGBoost/LightGBM
 brew install libomp
-```
 
-**3. Install Python Dependencies:**
-```bash
+# 4. Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+**Option A — Streamlit UI** *(recommended)*
+
+```bash
+streamlit run app.py
+# Opens at http://localhost:8501
+```
+
+1. Upload any CSV and select the target column.
+2. The engine trains Ridge, Random Forest, XGBoost, LightGBM, and an Ensemble — then displays a ranked leaderboard.
+3. Switch to the **Dynamic Test Predictions** tab to generate predictions using the winning model.
+
+**Option B — CLI Pipeline**
+
+```bash
+python main.py
+```
+
+Runs the full pipeline (data loading → preprocessing → GridSearchCV training → evaluation) and prints results to the terminal.
+
+### Tech Stack
+
+| Category | Libraries |
+|----------|-----------|
+| ML / Modeling | scikit-learn, XGBoost, LightGBM |
+| Data | pandas, NumPy, SciPy |
+| Visualization | Matplotlib, Seaborn |
+| Web Interface | Streamlit |
+| Serialization | joblib |
+
 ---
 
-### 💻 System Execution
+## 2 · Iris Flower Classification
 
-You have two strict methods to trigger the Machine Learning loops:
+A notebook-based classification project using the classic Iris dataset. It walks through the full data-science workflow — EDA, visualization, feature selection, model training, and evaluation — comparing five classifiers side by side.
 
-#### 🏆 Method A: The Streamlit Web Engine (Recommended)
-This is the ultimate, modernized UI deployment of the prediction stack. 
-1. Boot the server continuously locally:
-   ```bash
-   streamlit run app.py
-   ```
-2. Navigate dynamically to `http://localhost:8501` securely in your browser.
-3. Use the **🚀 Train Engine** tab to drag-and-drop a CSV, calculate predictions, and monitor algorithmic optimizations.
-4. Shift exactly to the **🔮 Dynamic Testing** tab to reconstruct identical Neural matrices and predict exact custom equations smoothly!
+### Highlights
 
-#### ⚙️ Method B: Headless Terminal Scripts (Backend Dev Mode)
-You can directly command the algorithm from the source script matrix:
-1. **Initialize Complete Pipeline:** 
-   ```bash
-   python main.py
-   ```
-   *This automatically routes data, runs hyperparameter GridSearch, and prints the leaderboard accuracy of your current dataset into the Terminal seamlessly!*
+- **Exploratory Data Analysis** — Pair plots, box plots by species, and a correlation heatmap to identify the most discriminative features (petal length and petal width).
+- **Five Classifiers Compared** — Logistic Regression, K-Nearest Neighbors, Support Vector Machine, Decision Tree, and Random Forest, all evaluated on accuracy, confusion matrices, and classification reports.
+- **Stratified Splitting** — 80/20 train-test split with stratification to preserve class balance.
+- **Feature Scaling** — StandardScaler applied to normalize feature distributions before training.
+
+### Directory Structure
+
+```
+Iris-Flower-Classification/
+├── Iris_Classification.ipynb   # Complete notebook (EDA → training → evaluation)
+└── .venv/                      # Local virtual environment
+```
+
+### Quick Start
+
+```bash
+cd Iris-Flower-Classification
+
+# Activate the existing virtual environment
+source .venv/bin/activate
+
+# Launch the notebook
+jupyter notebook Iris_Classification.ipynb
+```
+
+### Key Results
+
+| Model | Approx. Accuracy | Notes |
+|-------|-------------------|-------|
+| Logistic Regression | 93–97 % | Strong baseline, good generalization |
+| K-Nearest Neighbors | 93–97 % | Simple and effective, sensitive to *k* |
+| SVM | 93–100 % | Excellent on small, well-separated data |
+| Decision Tree | 93–97 % | Interpretable but prone to overfitting |
+| Random Forest | 93–97 % | Robust ensemble, handles feature noise well |
+
+### Tech Stack
+
+| Category | Libraries |
+|----------|-----------|
+| ML / Modeling | scikit-learn (LogisticRegression, KNN, SVC, DecisionTree, RandomForest) |
+| Data | pandas, NumPy |
+| Visualization | Matplotlib, Seaborn |
 
 ---
-> *More advanced architectures will be continually added to this root directory as I expand my AI & ML deployments permanently!*
+
+## Repository Structure
+
+```
+AI-ML-Projects/
+├── House Price Prediction/       # Regression project (Streamlit + CLI)
+├── Iris-Flower-Classification/   # Classification project (Jupyter Notebook)
+└── README.md                     # ← You are here
+```
+
+---
+
+## License
+
+This repository is intended for educational and portfolio purposes.
