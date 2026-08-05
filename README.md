@@ -1,6 +1,6 @@
 # AI & Machine Learning Projects
 
-A curated collection of end-to-end machine learning projects covering both **regression** and **classification** workflows. Each project demonstrates a complete pipeline — from exploratory data analysis and feature engineering through model training, evaluation, and deployment.
+A curated collection of end-to-end machine learning projects covering **regression**, **classification**, and **exploratory data analysis** workflows. Each project demonstrates a complete pipeline — from data cleaning and visualization through model training, evaluation, and deployment.
 
 ---
 
@@ -10,6 +10,7 @@ A curated collection of end-to-end machine learning projects covering both **reg
 |---|---------|------|-------|-----------|
 | 1 | [House Price Prediction](./House%20Price%20Prediction/) | Regression | XGBoost · LightGBM · Ridge · Random Forest · Ensemble | Streamlit Web App + CLI |
 | 2 | [Iris Flower Classification](./Iris-Flower-Classification/) | Classification | Logistic Regression · KNN · SVM · Decision Tree · Random Forest | Jupyter Notebook |
+| 3 | [Unemployment Analysis](./Unemployment-Analysis/) | EDA & Visualization | pandas · Matplotlib · Seaborn | Python Script (CLI) |
 
 ---
 
@@ -147,12 +148,78 @@ jupyter notebook Iris_Classification.ipynb
 
 ---
 
+## 3 · Unemployment Analysis
+
+An exploratory data analysis project that investigates unemployment trends across Indian states and regions. The script ingests government-sourced CSV data, performs automated cleaning, and generates a suite of publication-ready visualizations — including a pre-COVID vs. post-COVID impact comparison.
+
+### Highlights
+
+- **Automated Column Detection** — Dynamically identifies date, region, and unemployment-rate columns by name matching, making the script adaptable to similar CSV layouts.
+- **Data Cleaning Pipeline** — Strips whitespace from headers, parses dates with day-first formatting, drops duplicates, removes rows with invalid dates, and derives `Month` / `Year` features.
+- **Region-Level EDA** — Computes and prints average unemployment rates grouped by region, month, and year.
+- **Time-Series Visualization** — Line chart tracking unemployment over time for the top 3 most-affected regions.
+- **Top-10 Bar Chart** — Horizontal bar chart ranking the 10 regions with the highest average unemployment rates.
+- **Correlation Heatmap** — Visualizes relationships between unemployment rate, estimated employed count, and labour participation rate.
+- **COVID-19 Impact Comparison** — Splits data at March 2020 and plots a pre-COVID vs. post-COVID bar chart with percentage-change annotation.
+
+### Directory Structure
+
+```
+Unemployment-Analysis/
+├── analysis.py                             # Full analysis script (clean → EDA → plots)
+├── data/
+│   ├── Unemployment in India.csv           # Primary dataset (region, date, rate, employed, area)
+│   └── Unemployment_Rate_upto_11_2020.csv  # Extended dataset with coordinates
+├── outputs/                                # Generated charts (PNG, 150 DPI)
+│   ├── timeseries_chart.png
+│   ├── top10_bar_chart.png
+│   ├── correlation_heatmap.png
+│   └── covid_comparison.png
+└── .venv/                                  # Local virtual environment
+```
+
+### Quick Start
+
+```bash
+cd Unemployment-Analysis
+
+# Activate the existing virtual environment
+source .venv/bin/activate
+
+# Install dependencies (if not already present)
+pip install pandas matplotlib seaborn
+
+# Run the analysis
+python analysis.py
+```
+
+All charts are saved to the `outputs/` directory.
+
+### Generated Visualizations
+
+| Chart | Description |
+|-------|-------------|
+| `timeseries_chart.png` | Unemployment rate over time for the top 3 regions |
+| `top10_bar_chart.png` | Top 10 regions ranked by average unemployment rate |
+| `correlation_heatmap.png` | Correlation between unemployment, employment, and labour participation |
+| `covid_comparison.png` | Pre-COVID vs. post-COVID average unemployment rate comparison |
+
+### Tech Stack
+
+| Category | Libraries |
+|----------|-----------|
+| Data | pandas |
+| Visualization | Matplotlib, Seaborn |
+
+---
+
 ## Repository Structure
 
 ```
 AI-ML-Projects/
 ├── House Price Prediction/       # Regression project (Streamlit + CLI)
 ├── Iris-Flower-Classification/   # Classification project (Jupyter Notebook)
+├── Unemployment-Analysis/        # EDA & visualization project (Python Script)
 └── README.md                     # ← You are here
 ```
 
