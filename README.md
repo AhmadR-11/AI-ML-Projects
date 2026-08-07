@@ -11,6 +11,7 @@ A curated collection of end-to-end machine learning projects covering **regressi
 | 1 | [House Price Prediction](./House%20Price%20Prediction/) | Regression | XGBoost · LightGBM · Ridge · Random Forest · Ensemble | Streamlit Web App + CLI |
 | 2 | [Iris Flower Classification](./Iris-Flower-Classification/) | Classification | Logistic Regression · KNN · SVM · Decision Tree · Random Forest | Jupyter Notebook |
 | 3 | [Unemployment Analysis](./Unemployment-Analysis/) | EDA & Visualization | pandas · Matplotlib · Seaborn | Python Script (CLI) |
+| 4 | [Car Price Prediction](./Car-Price-Prediction/) | EDA & Feature Engineering | pandas · Matplotlib · Seaborn · NumPy | Python Script (CLI) |
 
 ---
 
@@ -213,6 +214,70 @@ All charts are saved to the `outputs/` directory.
 
 ---
 
+## 4 · Car Price Prediction
+
+An exploratory data analysis and feature engineering project built around an automotive pricing dataset (205 vehicles, 26 attributes). The script walks through a structured five-phase workflow — data loading, cleaning, feature engineering, visualization, and encoding — producing publication-ready charts and a fully encoded DataFrame ready for downstream modeling.
+
+### Highlights
+
+- **Structured Pipeline** — Five clearly separated phases: data loading → cleaning → feature engineering → EDA visualizations → encoding & correlation.
+- **IQR Outlier Removal** — Detects and removes price outliers using the interquartile range method (1.5× IQR bounds).
+- **Feature Engineering** — Derives `Car_Age` from the current year and extracts the `Brand` name from the `CarName` column with title-case normalization.
+- **Categorical Standardization** — Trims whitespace and applies consistent title-casing across 9 categorical columns (fuel type, aspiration, body style, drive wheel, etc.).
+- **Six Visualizations** — Price distribution histogram with KDE, fuel-type box plot, price-vs-age scatter plot (colored by fuel type), top-10 brands bar chart, transmission box plot, and a full-feature correlation heatmap.
+- **One-Hot Encoding** — Expands categorical columns (`Fuel_Type`, `Seller_Type`, `Transmission`, `Brand`) via `pd.get_dummies` with `drop_first=True`, preparing the data for regression models.
+- **Top Feature Correlation** — Ranks the 10 numeric features most correlated with selling price after encoding.
+
+### Directory Structure
+
+```
+Car-Price-Prediction/
+├── analysis.py                  # Full analysis script (5 phases)
+├── data/
+│   └── CarPrice_Assignment.csv  # 205 vehicles × 26 attributes
+├── outputs/                     # Generated charts (PNG)
+│   ├── 01_price_distribution.png
+│   ├── 02_price_vs_fuel.png
+│   ├── 04_top10_brands.png
+│   └── 06_correlation_heatmap.png
+└── .venv/                       # Local virtual environment
+```
+
+### Quick Start
+
+```bash
+cd Car-Price-Prediction
+
+# Activate the existing virtual environment
+source .venv/bin/activate
+
+# Install dependencies (if not already present)
+pip install pandas numpy matplotlib seaborn
+
+# Run the analysis
+python analysis.py
+```
+
+All charts are saved to the `outputs/` directory.
+
+### Generated Visualizations
+
+| Chart | Description |
+|-------|-------------|
+| `01_price_distribution.png` | Selling price distribution with KDE overlay and skewness metric |
+| `02_price_vs_fuel.png` | Box plot comparing selling price across fuel types |
+| `04_top10_brands.png` | Top 10 brands ranked by average selling price |
+| `06_correlation_heatmap.png` | Full-feature correlation heatmap (post-encoding) |
+
+### Tech Stack
+
+| Category | Libraries |
+|----------|-----------|
+| Data | pandas, NumPy |
+| Visualization | Matplotlib, Seaborn |
+
+---
+
 ## Repository Structure
 
 ```
@@ -220,6 +285,7 @@ AI-ML-Projects/
 ├── House Price Prediction/       # Regression project (Streamlit + CLI)
 ├── Iris-Flower-Classification/   # Classification project (Jupyter Notebook)
 ├── Unemployment-Analysis/        # EDA & visualization project (Python Script)
+├── Car-Price-Prediction/         # EDA & feature engineering project (Python Script)
 └── README.md                     # ← You are here
 ```
 
