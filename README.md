@@ -11,7 +11,7 @@ A curated collection of end-to-end machine learning projects covering **regressi
 | 1 | [House Price Prediction](./House%20Price%20Prediction/) | Regression | XGBoost · LightGBM · Ridge · Random Forest · Ensemble | Streamlit Web App + CLI |
 | 2 | [Iris Flower Classification](./Iris-Flower-Classification/) | Classification | Logistic Regression · KNN · SVM · Decision Tree · Random Forest | Jupyter Notebook |
 | 3 | [Unemployment Analysis](./Unemployment-Analysis/) | EDA & Visualization | pandas · Matplotlib · Seaborn | Python Script (CLI) |
-| 4 | [Car Price Prediction](./Car-Price-Prediction/) | EDA & Feature Engineering | pandas · Matplotlib · Seaborn · NumPy | Python Script (CLI) |
+| 4 | [Car Price Prediction](./Car-Price-Prediction/) | Regression & EDA | Linear Regression · Random Forest · Gradient Boosting | Dash Web App + CLI |
 
 ---
 
@@ -216,30 +216,30 @@ All charts are saved to the `outputs/` directory.
 
 ## 4 · Car Price Prediction
 
-An exploratory data analysis and feature engineering project built around an automotive pricing dataset (205 vehicles, 26 attributes). The script walks through a structured five-phase workflow — data loading, cleaning, feature engineering, visualization, and encoding — producing publication-ready charts and a fully encoded DataFrame ready for downstream modeling.
+An interactive Dash web dashboard for predicting automobile prices. The project pairs a reusable data-cleaning and model-training backend (`analysis.py`) with a polished, dark-themed Plotly dashboard (`app.py`) featuring five tabs — EDA, Correlations, Model Performance, Feature Importance, and a live Price Predictor.
 
 ### Highlights
 
-- **Structured Pipeline** — Five clearly separated phases: data loading → cleaning → feature engineering → EDA visualizations → encoding & correlation.
-- **IQR Outlier Removal** — Detects and removes price outliers using the interquartile range method (1.5× IQR bounds).
-- **Feature Engineering** — Derives `Car_Age` from the current year and extracts the `Brand` name from the `CarName` column with title-case normalization.
-- **Categorical Standardization** — Trims whitespace and applies consistent title-casing across 9 categorical columns (fuel type, aspiration, body style, drive wheel, etc.).
-- **Six Visualizations** — Price distribution histogram with KDE, fuel-type box plot, price-vs-age scatter plot (colored by fuel type), top-10 brands bar chart, transmission box plot, and a full-feature correlation heatmap.
-- **One-Hot Encoding** — Expands categorical columns (`Fuel_Type`, `Seller_Type`, `Transmission`, `Brand`) via `pd.get_dummies` with `drop_first=True`, preparing the data for regression models.
-- **Top Feature Correlation** — Ranks the 10 numeric features most correlated with selling price after encoding.
+- **Interactive Dash Dashboard** — Five-tab dark-themed web app built with Dash, Dash Bootstrap Components, and Plotly, featuring summary cards (total cars, average price, best model, R² score) and responsive layouts.
+- **Three Regression Models** — Trains Linear Regression, Random Forest, and Gradient Boosting side by side; benchmarks all three on MAE, RMSE, and R² with annotated bar charts and actual-vs-predicted scatter plots (with ideal-fit line).
+- **Feature Importance Comparison** — Ranks the top 15 features for both Random Forest and Gradient Boosting, plus a grouped bar chart comparing both models.
+- **Rich EDA Visualizations** — Price distribution with marginal box plot, fuel-type box plot, price-vs-age scatter with OLS trendline, top-10 brands bar chart, and transmission violin plot — all interactive via Plotly.
+- **Correlation Analysis** — Full-feature heatmap, KMs-driven scatter with trendline, and average price by year line chart.
+- **Live Price Predictor** — Users select brand, fuel type, transmission, seller type, car age, and KMs driven; all three models produce predictions displayed as alerts, with a gauge chart highlighting the best estimate.
+- **Robust Cleaning Backend** — Deduplication, null imputation (mode for categorical, median for numeric), IQR-based outlier removal, brand extraction from `CarName`, `Car_Age` derivation, and one-hot encoding with `drop_first=True`.
+- **Custom CSS Theming** — Deep navy gradient backgrounds, accent color (`#00b4d8`), hover-lift cards, and styled sliders via `assets/style.css`.
 
 ### Directory Structure
 
 ```
 Car-Price-Prediction/
-├── analysis.py                  # Full analysis script (5 phases)
+├── app.py                       # Dash web dashboard (5 tabs, Plotly charts, live predictor)
+├── analysis.py                  # Data cleaning, encoding, and model training module
+├── assets/
+│   └── style.css                # Custom dark-theme CSS for the dashboard
 ├── data/
 │   └── CarPrice_Assignment.csv  # 205 vehicles × 26 attributes
-├── outputs/                     # Generated charts (PNG)
-│   ├── 01_price_distribution.png
-│   ├── 02_price_vs_fuel.png
-│   ├── 04_top10_brands.png
-│   └── 06_correlation_heatmap.png
+├── outputs/                     # Pre-generated static charts (PNG)
 └── .venv/                       # Local virtual environment
 ```
 
@@ -252,29 +252,31 @@ cd Car-Price-Prediction
 source .venv/bin/activate
 
 # Install dependencies (if not already present)
-pip install pandas numpy matplotlib seaborn
+pip install dash dash-bootstrap-components plotly pandas numpy scikit-learn
 
-# Run the analysis
-python analysis.py
+# Launch the dashboard
+python app.py
+# Opens at http://127.0.0.1:8050
 ```
 
-All charts are saved to the `outputs/` directory.
+### Dashboard Tabs
 
-### Generated Visualizations
-
-| Chart | Description |
-|-------|-------------|
-| `01_price_distribution.png` | Selling price distribution with KDE overlay and skewness metric |
-| `02_price_vs_fuel.png` | Box plot comparing selling price across fuel types |
-| `04_top10_brands.png` | Top 10 brands ranked by average selling price |
-| `06_correlation_heatmap.png` | Full-feature correlation heatmap (post-encoding) |
+| Tab | Description |
+|-----|-------------|
+| 📊 **EDA** | Price distribution, fuel-type box plot, price-vs-age scatter, top-10 brands, transmission violin plot |
+| 🔥 **Correlations** | Full-feature heatmap, KMs-driven scatter with OLS trendline, average price by year |
+| 🤖 **Model Performance** | Metrics table + MAE / RMSE / R² bar charts + actual-vs-predicted scatter for each model |
+| 🎯 **Feature Importance** | Top-15 features for Random Forest & Gradient Boosting + side-by-side comparison chart |
+| 🔮 **Price Predictor** | Input form (brand, fuel, transmission, seller, age, KMs) → predictions from all models + gauge chart |
 
 ### Tech Stack
 
 | Category | Libraries |
 |----------|-----------|
+| ML / Modeling | scikit-learn (LinearRegression, RandomForest, GradientBoosting) |
 | Data | pandas, NumPy |
-| Visualization | Matplotlib, Seaborn |
+| Web Interface | Dash, Dash Bootstrap Components |
+| Visualization | Plotly |
 
 ---
 

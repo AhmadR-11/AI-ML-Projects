@@ -1,0 +1,80 @@
+body {
+    background-color: #1a1a2e;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.navbar-custom {
+    background: linear-gradient(135deg, #16213e, #0f3460);
+    border-bottom: 2px solid #00b4d8;
+    padding: 15px 20px;
+}
+
+.navbar-brand-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00b4d8 !important;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #16213e, #0f3460);
+    border: 1px solid #00b4d8;
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.summary-card:hover {
+    transform: translateY(-4px);
+}
+
+.card-metric {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #00b4d8;
+}
+
+.card-label {
+    font-size: 0.85rem;
+    color: #adb5bd;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-tabs .nav-link {
+    color: #adb5bd;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    color: #00b4d8;
+    background: transparent;
+    border-bottom: 2px solid #00b4d8;
+}
+
+.chart-card {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+}
+
+#predict-btn {
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+}
+
+#predict-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+}
+
+.rc-slider-track {
+    background-color: #00b4d8;
+}
+
+.rc-slider-handle {
+    border-color: #00b4d8;
+}
