@@ -1,0 +1,149 @@
+/* Dark theme base */
+.stApp {
+    background-color: #0e1117;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #161b22;
+    border-right: 1px solid #30363d;
+}
+
+[data-testid="stSidebar"] .stRadio label {
+    color: #c9d1d9;
+    font-size: 15px;
+    padding: 8px 0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+[data-testid="stSidebar"] .stRadio label:hover {
+    color: #58a6ff;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+[data-testid="stMetric"]:hover {
+    transform: translateY(-2px);
+    border-color: #58a6ff;
+}
+
+[data-testid="stMetricValue"] {
+    color: #58a6ff !important;
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+}
+
+/* Primary button */
+.stButton button[kind="primary"] {
+    background: linear-gradient(135deg, #238636, #2ea043);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.3s;
+}
+
+.stButton button[kind="primary"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(35, 134, 54, 0.4);
+}
+
+/* Secondary buttons */
+.stButton button {
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: 1px solid #30363d;
+    background-color: #161b22;
+    color: #c9d1d9;
+}
+
+.stButton button:hover {
+    border-color: #58a6ff;
+    color: #58a6ff;
+}
+
+/* Text area */
+.stTextArea textarea {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    color: #c9d1d9;
+    font-size: 15px;
+}
+
+.stTextArea textarea:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+}
+
+/* Selectbox */
+.stSelectbox select {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    border-radius: 8px;
+}
+
+/* DataFrames */
+[data-testid="stDataFrame"] {
+    border: 1px solid #30363d;
+    border-radius: 8px;
+}
+
+/* Divider */
+hr {
+    border-color: #30363d;
+    margin: 20px 0;
+}
+
+/* Success/Error/Warning/Info boxes */
+.stSuccess {
+    background-color: #0d1117;
+    border: 1px solid #2ea043;
+    border-radius: 10px;
+}
+
+.stError {
+    background-color: #0d1117;
+    border: 1px solid #f85149;
+    border-radius: 10px;
+}
+
+/* Expander */
+[data-testid="stExpander"] {
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    background-color: #161b22;
+}
+
+/* Progress bar */
+.stProgress > div > div {
+    background-color: #238636;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab"] {
+    color: #8b949e;
+    font-weight: 500;
+}
+
+.stTabs [aria-selected="true"] {
+    color: #58a6ff;
+    border-bottom: 2px solid #58a6ff;
+}
+
+/* Code block */
+.stCode {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+}

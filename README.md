@@ -1,6 +1,6 @@
 # AI & Machine Learning Projects
 
-A curated collection of end-to-end machine learning projects covering **regression**, **classification**, and **exploratory data analysis** workflows. Each project demonstrates a complete pipeline — from data cleaning and visualization through model training, evaluation, and deployment.
+A curated collection of end-to-end machine learning projects covering **regression**, **classification**, **NLP**, and **exploratory data analysis** workflows. Each project demonstrates a complete pipeline — from data cleaning and visualization through model training, evaluation, and deployment.
 
 ---
 
@@ -12,6 +12,7 @@ A curated collection of end-to-end machine learning projects covering **regressi
 | 2 | [Iris Flower Classification](./Iris-Flower-Classification/) | Classification | Logistic Regression · KNN · SVM · Decision Tree · Random Forest | Jupyter Notebook |
 | 3 | [Unemployment Analysis](./Unemployment-Analysis/) | EDA & Visualization | pandas · Matplotlib · Seaborn | Python Script (CLI) |
 | 4 | [Car Price Prediction](./Car-Price-Prediction/) | Regression & EDA | Linear Regression · Random Forest · Gradient Boosting | Dash Web App + CLI |
+| 5 | [Email Spam Detection](./Email-Spam-Detection/) | NLP Classification | Naive Bayes · Logistic Regression · SVM · TF-IDF | Streamlit Web App |
 
 ---
 
@@ -280,6 +281,80 @@ python app.py
 
 ---
 
+## 5 · Email Spam Detection
+
+A binary NLP classifier that distinguishes spam from legitimate (ham) emails using TF-IDF feature extraction and three machine learning models. The project includes both a detailed Jupyter notebook walkthrough and a polished, dark-themed Streamlit dashboard with five pages — Overview, EDA, WordClouds, Model Performance, and a Live Spam Detector.
+
+### Highlights
+
+- **NLP Text Preprocessing** — Lowercasing, URL/email removal, punctuation stripping, digit removal, stopword filtering, and Porter stemming via NLTK. Gracefully falls back to a regex-based tokenizer when NLTK data is unavailable.
+- **TF-IDF Vectorization** — Extracts up to 5,000 features with unigram + bigram `ngram_range=(1, 2)`, `min_df=2`, and sublinear TF scaling for robust term weighting.
+- **Three Classifiers** — Multinomial Naive Bayes (α = 0.1), Logistic Regression, and SVM (linear kernel) trained on an 80/20 stratified split; all evaluated on Accuracy, Precision, Recall, and F1 Score.
+- **Interactive Streamlit Dashboard** — Five-page app with sidebar navigation, dataset stats, best-model badge, and custom GitHub-inspired dark CSS theme (`assets/style.css`).
+- **EDA Visualizations** — Class distribution bar + pie chart, character/word count box plots and histograms by label, plus descriptive statistics grouped by class.
+- **WordCloud Analysis** — Side-by-side word clouds (spam in reds, ham in greens) and top-20 most frequent word bar charts for each class.
+- **Confusion Matrices & Metrics** — Per-model confusion matrix heatmaps, four side-by-side bar charts (Accuracy, Precision, Recall, F1), and score cards with best-model highlighting.
+- **Live Spam Detector** — Text input with model selector, probability breakdown, confidence bar, preprocessed-text preview, and batch prediction across all three models.
+- **Jupyter Notebook** — Step-by-step walkthrough: data loading → preprocessing → word clouds → TF-IDF → model training → evaluation → prediction.
+
+### Directory Structure
+
+```
+Email-Spam-Detection/
+├── app.py                    # Streamlit dashboard (5 pages, live predictor)
+├── Spam_Detection.ipynb      # Full notebook walkthrough (33 cells)
+├── requirements.txt          # Python dependencies
+├── .gitignore                # Excludes .venv, nltk_data, outputs, __pycache__
+├── assets/
+│   └── style.css             # Custom dark-theme CSS (GitHub-inspired)
+├── data/
+│   ├── spam.csv              # Primary dataset (~5,500 messages, ham/spam labels)
+│   └── Spam_SMS.csv          # Alternate dataset
+├── nltk_data/                # Local NLTK corpora (stopwords, punkt tokenizer)
+├── outputs/                  # Pre-generated static charts (PNG)
+└── .venv/                    # Local virtual environment
+```
+
+### Quick Start
+
+```bash
+cd Email-Spam-Detection
+
+# Activate the existing virtual environment
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Launch the Streamlit dashboard
+streamlit run app.py
+# Opens at http://localhost:8501
+```
+
+Alternatively, open `Spam_Detection.ipynb` in Jupyter for a step-by-step notebook walkthrough.
+
+### Dashboard Pages
+
+| Page | Description |
+|------|-------------|
+| 🏠 **Overview** | Dataset stats, model results summary table, sample spam/ham messages |
+| 📊 **EDA & Visualizations** | Class distribution, character/word count analysis, descriptive statistics |
+| ☁️ **WordClouds** | Spam vs. ham word clouds + top-20 most frequent words bar charts |
+| 🤖 **Model Performance** | Score cards, 4-metric comparison bars, confusion matrix heatmaps |
+| 🔮 **Live Spam Detector** | Real-time prediction with model selector, confidence bar, batch testing |
+
+### Tech Stack
+
+| Category | Libraries |
+|----------|-----------|
+| ML / Modeling | scikit-learn (MultinomialNB, LogisticRegression, SVM), TF-IDF |
+| NLP | NLTK (stopwords, PorterStemmer, word_tokenize) |
+| Data | pandas, NumPy |
+| Visualization | Matplotlib, Seaborn, WordCloud |
+| Web Interface | Streamlit |
+
+---
+
 ## Repository Structure
 
 ```
@@ -287,7 +362,8 @@ AI-ML-Projects/
 ├── House Price Prediction/       # Regression project (Streamlit + CLI)
 ├── Iris-Flower-Classification/   # Classification project (Jupyter Notebook)
 ├── Unemployment-Analysis/        # EDA & visualization project (Python Script)
-├── Car-Price-Prediction/         # EDA & feature engineering project (Python Script)
+├── Car-Price-Prediction/         # Regression & EDA project (Dash Web App)
+├── Email-Spam-Detection/         # NLP classification project (Streamlit Web App)
 └── README.md                     # ← You are here
 ```
 
