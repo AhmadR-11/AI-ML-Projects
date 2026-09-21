@@ -1,6 +1,6 @@
 # AI & Machine Learning Projects
 
-A curated collection of end-to-end machine learning projects covering **regression**, **classification**, **NLP**, and **exploratory data analysis** workflows. Each project demonstrates a complete pipeline — from data cleaning and visualization through model training, evaluation, and deployment.
+A curated collection of end-to-end machine learning projects covering **regression**, **classification**, **NLP**, **deep learning**, and **exploratory data analysis** workflows. Each project demonstrates a complete pipeline — from data cleaning and visualization through model training, evaluation, and deployment.
 
 ---
 
@@ -13,6 +13,7 @@ A curated collection of end-to-end machine learning projects covering **regressi
 | 3 | [Unemployment Analysis](./Unemployment-Analysis/) | EDA & Visualization | pandas · Matplotlib · Seaborn | Python Script (CLI) |
 | 4 | [Car Price Prediction](./Car-Price-Prediction/) | Regression & EDA | Linear Regression · Random Forest · Gradient Boosting | Dash Web App + CLI |
 | 5 | [Email Spam Detection](./Email-Spam-Detection/) | NLP Classification | Naive Bayes · Logistic Regression · SVM · TF-IDF | Streamlit Web App |
+| 6 | [MNIST Digit Recognition](./MNIST/) | Deep Learning | TensorFlow · Keras · CNN | Jupyter Notebook (WIP) |
 
 ---
 
@@ -355,6 +356,80 @@ Alternatively, open `Spam_Detection.ipynb` in Jupyter for a step-by-step noteboo
 
 ---
 
+## 6 · MNIST Digit Recognition
+
+A deep learning project scaffolded for handwritten digit classification on the MNIST dataset using TensorFlow/Keras. The repository includes an automated setup script that generates the full project structure (data, notebooks, models, outputs, src), a comprehensive `.gitignore` for large binaries, and a Kaggle-integrated dependency list — ready for CNN development and experimentation.
+
+> **Status:** 🚧 Work in Progress — Project structure and environment are fully configured; notebooks and model code are under active development.
+
+### Highlights
+
+- **Automated Project Scaffolding** — `setup_project.py` generates the complete directory tree (`data/raw`, `data/processed`, `notebooks`, `models`, `outputs/plots`, `outputs/reports`, `src`) with `.gitkeep` files for Git tracking.
+- **TensorFlow / Keras Stack** — Designed for Convolutional Neural Network (CNN) architectures for image classification on 28×28 grayscale digit images (0–9).
+- **Kaggle Integration** — `kaggle` listed as a dependency for seamless dataset download directly from the Kaggle MNIST competition.
+- **Comprehensive .gitignore** — Excludes virtual environments, large data files (`.csv`, `.npy`, `.npz`), model checkpoints (`.h5`, `.keras`, `.pth`, `.ckpt`, `.onnx`), credentials (`kaggle.json`, `.env`), and IDE configs.
+- **Organized Output Directories** — Separate `outputs/plots/` for visualizations and `outputs/reports/` for evaluation reports.
+- **Modular Source Layout** — `src/` directory prepared for reusable modules (data loading, preprocessing, model definitions, training loops, evaluation).
+
+### Directory Structure
+
+```
+MNIST/
+├── setup_project.py              # Automated project structure generator
+├── requirements.txt              # Python dependencies (TensorFlow, scikit-learn, Kaggle)
+├── .gitignore                    # Excludes data, models, credentials, IDE configs
+├── mnist-digit-recognition/      # Core project directory
+│   ├── requirements.txt          # Mirrored dependencies
+│   ├── .gitignore                # Inner project exclusions
+│   ├── data/
+│   │   ├── raw/                  # Raw MNIST dataset (downloaded via Kaggle)
+│   │   └── processed/            # Preprocessed / normalized data
+│   ├── notebooks/                # Jupyter notebooks (EDA, training, evaluation)
+│   ├── models/                   # Saved model weights and checkpoints
+│   ├── outputs/
+│   │   ├── plots/                # Training curves, confusion matrices, sample predictions
+│   │   └── reports/              # Classification reports, metrics summaries
+│   └── src/                      # Reusable Python modules
+└── .mnist_env/                   # Local virtual environment
+```
+
+### Quick Start
+
+```bash
+cd MNIST
+
+# Activate the existing virtual environment
+source .mnist_env/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# (Optional) Generate the project structure from scratch
+python setup_project.py
+```
+
+### Planned Pipeline
+
+| Phase | Description |
+|-------|-------------|
+| 📂 **Data Loading** | Download MNIST via Kaggle API, load and inspect 60K training + 10K test images |
+| 🔍 **EDA** | Visualize sample digits, plot class distribution, pixel intensity analysis |
+| 🧹 **Preprocessing** | Normalize pixel values (0–1), reshape for CNN input (28×28×1), one-hot encode labels |
+| 🧠 **Model Training** | Build and train a CNN (Conv2D → MaxPool → Dense → Softmax) with TensorFlow/Keras |
+| 📊 **Evaluation** | Accuracy, confusion matrix, per-class precision/recall, sample misclassifications |
+
+### Tech Stack
+
+| Category | Libraries |
+|----------|-----------|
+| Deep Learning | TensorFlow, Keras |
+| ML / Utilities | scikit-learn |
+| Data | pandas, NumPy |
+| Visualization | Matplotlib, Seaborn |
+| Data Source | Kaggle API |
+
+---
+
 ## Repository Structure
 
 ```
@@ -364,6 +439,7 @@ AI-ML-Projects/
 ├── Unemployment-Analysis/        # EDA & visualization project (Python Script)
 ├── Car-Price-Prediction/         # Regression & EDA project (Dash Web App)
 ├── Email-Spam-Detection/         # NLP classification project (Streamlit Web App)
+├── MNIST/                        # Deep learning project (TensorFlow CNN — WIP)
 └── README.md                     # ← You are here
 ```
 
