@@ -13,7 +13,7 @@ A curated collection of end-to-end machine learning projects covering **regressi
 | 3 | [Unemployment Analysis](./Unemployment-Analysis/) | EDA & Visualization | pandas · Matplotlib · Seaborn | Python Script (CLI) |
 | 4 | [Car Price Prediction](./Car-Price-Prediction/) | Regression & EDA | Linear Regression · Random Forest · Gradient Boosting | Dash Web App + CLI |
 | 5 | [Email Spam Detection](./Email-Spam-Detection/) | NLP Classification | Naive Bayes · Logistic Regression · SVM · TF-IDF | Streamlit Web App |
-| 6 | [MNIST Digit Recognition](./MNIST/) | Deep Learning | TensorFlow · Keras · CNN | Jupyter Notebook (WIP) |
+| 6 | [MNIST Digit Recognition](./MNIST/) | Deep Learning | TensorFlow · Keras · CNN (Baseline + Advanced) | Jupyter Notebook |
 
 ---
 
@@ -358,18 +358,31 @@ Alternatively, open `Spam_Detection.ipynb` in Jupyter for a step-by-step noteboo
 
 ## 6 · MNIST Digit Recognition
 
-A deep learning project scaffolded for handwritten digit classification on the MNIST dataset using TensorFlow/Keras. The repository includes an automated setup script that generates the full project structure (data, notebooks, models, outputs, src), a comprehensive `.gitignore` for large binaries, and a Kaggle-integrated dependency list — ready for CNN development and experimentation.
-
-> **Status:** 🚧 Work in Progress — Project structure and environment are fully configured; notebooks and model code are under active development.
+An end-to-end deep learning pipeline for handwritten digit classification on the Kaggle MNIST dataset (42,000 training + 28,000 test images). The project builds, trains, and compares two CNN architectures — a Baseline CNN (421K parameters) and an Advanced Deep CNN (872K parameters with Batch Normalization, multi-stage Dropout, and real-time data augmentation) — achieving **99.62% validation accuracy**. Includes comprehensive EDA, error analysis, Conv2D feature map visualization, and a Kaggle-ready submission file.
 
 ### Highlights
 
-- **Automated Project Scaffolding** — `setup_project.py` generates the complete directory tree (`data/raw`, `data/processed`, `notebooks`, `models`, `outputs/plots`, `outputs/reports`, `src`) with `.gitkeep` files for Git tracking.
-- **TensorFlow / Keras Stack** — Designed for Convolutional Neural Network (CNN) architectures for image classification on 28×28 grayscale digit images (0–9).
-- **Kaggle Integration** — `kaggle` listed as a dependency for seamless dataset download directly from the Kaggle MNIST competition.
-- **Comprehensive .gitignore** — Excludes virtual environments, large data files (`.csv`, `.npy`, `.npz`), model checkpoints (`.h5`, `.keras`, `.pth`, `.ckpt`, `.onnx`), credentials (`kaggle.json`, `.env`), and IDE configs.
-- **Organized Output Directories** — Separate `outputs/plots/` for visualizations and `outputs/reports/` for evaluation reports.
-- **Modular Source Layout** — `src/` directory prepared for reusable modules (data loading, preprocessing, model definitions, training loops, evaluation).
+- **Two CNN Architectures** — Baseline CNN (8 layers, 421,642 params) for rapid prototyping and an Advanced Deep CNN (15 layers, 872,426 params) with double-convolution blocks, Batch Normalization, and progressive Dropout (0.25 → 0.4 → 0.5).
+- **99.62% Validation Accuracy** — Advanced CNN achieves 99.62% accuracy (val_loss: 0.0157) on a 4,200-sample stratified validation set, with EarlyStopping restoring the best weights.
+- **Real-Time Data Augmentation** — Conservative digit-safe augmentations via `ImageDataGenerator` (±10° rotation, ±10% shifts and zoom) — explicitly avoids flips to preserve digit semantics (e.g., 6 vs. 9).
+- **Training Callbacks** — EarlyStopping (`patience=5`), ModelCheckpoint (saves best `.keras` weights), and ReduceLROnPlateau for adaptive learning rate scheduling.
+- **Comprehensive EDA** — Class distribution bar chart, 5×10 sample digit grid, average pixel intensity images per class, and pixel statistics summary.
+- **Preprocessing Pipeline** — Pixel normalization (0–255 → 0.0–1.0), reshape to 4D tensors (28×28×1), one-hot encoding, 90/10 stratified train/validation split, and processed arrays saved as `.npy` files.
+- **Error Analysis** — Top-20 misclassified samples visualization, top confused digit pairs analysis (7→2, 9→4, 4→9), and side-by-side confusion matrix heatmaps for both models.
+- **Feature Map Visualization** — Extracts and displays 16 feature maps from the first Conv2D layer to illustrate learned edge and texture detectors.
+- **Kaggle Submission** — Generates a 28,000-row `submission.csv` (`ImageId`, `Label`) from the best-performing model for direct Kaggle upload.
+- **Automated Scaffolding** — `setup_project.py` generates the full directory tree with `.gitkeep` files for Git tracking.
+
+### Model Comparison
+
+| Metric | Baseline CNN | Advanced CNN |
+|--------|-------------|-------------|
+| **Parameters** | 421,642 | 872,426 |
+| **Training Epochs** | 22 | 23 |
+| **Best Val Accuracy** | 99.14% | **99.62%** |
+| **Best Val Loss** | 0.0375 | **0.0157** |
+| **Training Time** | 142 s | 648 s |
+| **Model Size** | 4.86 MB | 10.06 MB |
 
 ### Directory Structure
 
@@ -378,18 +391,34 @@ MNIST/
 ├── setup_project.py              # Automated project structure generator
 ├── requirements.txt              # Python dependencies (TensorFlow, scikit-learn, Kaggle)
 ├── .gitignore                    # Excludes data, models, credentials, IDE configs
-├── mnist-digit-recognition/      # Core project directory
-│   ├── requirements.txt          # Mirrored dependencies
-│   ├── .gitignore                # Inner project exclusions
-│   ├── data/
-│   │   ├── raw/                  # Raw MNIST dataset (downloaded via Kaggle)
-│   │   └── processed/            # Preprocessed / normalized data
-│   ├── notebooks/                # Jupyter notebooks (EDA, training, evaluation)
-│   ├── models/                   # Saved model weights and checkpoints
-│   ├── outputs/
-│   │   ├── plots/                # Training curves, confusion matrices, sample predictions
-│   │   └── reports/              # Classification reports, metrics summaries
-│   └── src/                      # Reusable Python modules
+├── notebooks/
+│   └── 01_eda.ipynb              # Complete notebook (59 cells: EDA → preprocessing →
+│                                 #   CNN architectures → training → evaluation → submission)
+├── data/
+│   ├── raw/                      # Raw Kaggle CSVs (train.csv, test.csv)
+│   └── processed/                # Normalized .npy arrays (X_train, X_val, X_test, y_train, y_val)
+├── models/                       # Saved model weights (.h5, .keras)
+│   ├── baseline_model.h5         # Baseline CNN weights
+│   ├── advanced_model.h5         # Advanced CNN weights
+│   └── best_model.h5             # Best-performing model (Advanced CNN)
+├── outputs/
+│   ├── submission.csv            # Kaggle submission (28,000 predictions)
+│   ├── plots/                    # Generated visualizations (PNG)
+│   │   ├── digit_sample_grid.png
+│   │   ├── digit_class_distribution.png
+│   │   ├── average_digit_images.png
+│   │   ├── training_curves.png
+│   │   ├── confusion_matrices_comparison.png
+│   │   ├── misclassified_top20.png
+│   │   ├── top_confused_digit_pairs.png
+│   │   ├── feature_maps_conv1.png
+│   │   └── test_sample_predictions.png
+│   └── reports/                  # Metrics and logs
+│       ├── final_report.md
+│       ├── model_comparison_summary.csv
+│       ├── baseline_training_log.csv
+│       └── advanced_training_log.csv
+├── src/                          # Reusable Python modules
 └── .mnist_env/                   # Local virtual environment
 ```
 
@@ -404,26 +433,30 @@ source .mnist_env/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# (Optional) Generate the project structure from scratch
+# (Optional) Regenerate the project structure
 python setup_project.py
+
+# Launch the notebook
+jupyter notebook notebooks/01_eda.ipynb
 ```
 
-### Planned Pipeline
+### Notebook Pipeline (59 cells)
 
-| Phase | Description |
-|-------|-------------|
-| 📂 **Data Loading** | Download MNIST via Kaggle API, load and inspect 60K training + 10K test images |
-| 🔍 **EDA** | Visualize sample digits, plot class distribution, pixel intensity analysis |
-| 🧹 **Preprocessing** | Normalize pixel values (0–1), reshape for CNN input (28×28×1), one-hot encode labels |
-| 🧠 **Model Training** | Build and train a CNN (Conv2D → MaxPool → Dense → Softmax) with TensorFlow/Keras |
-| 📊 **Evaluation** | Accuracy, confusion matrix, per-class precision/recall, sample misclassifications |
+| Phase | Cells | Description |
+|-------|-------|-------------|
+| 📊 **EDA** | 1–12 | Load Kaggle CSVs, class distribution, 5×10 sample grid, average digit images, pixel stats |
+| 🧹 **Preprocessing** | 13–27 | Normalize, reshape (28×28×1), one-hot encode, 90/10 stratified split, data augmentation, save `.npy` |
+| 🧠 **Model Architecture** | 28–37 | Build Baseline CNN (8 layers) + Advanced Deep CNN (15 layers), compile with Adam + categorical cross-entropy |
+| 🏋️ **Training** | 38–43 | Train both models with EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, plot training curves |
+| 📈 **Evaluation** | 44–47 | Classification reports, confusion matrices, Kaggle submission generation |
+| 🔬 **Error Analysis** | 48–58 | Misclassified samples, top confused pairs, Conv2D feature maps, final report generation |
 
 ### Tech Stack
 
 | Category | Libraries |
 |----------|-----------|
-| Deep Learning | TensorFlow, Keras |
-| ML / Utilities | scikit-learn |
+| Deep Learning | TensorFlow 2.x, Keras (Sequential API) |
+| ML / Utilities | scikit-learn (train_test_split, classification_report, confusion_matrix) |
 | Data | pandas, NumPy |
 | Visualization | Matplotlib, Seaborn |
 | Data Source | Kaggle API |
@@ -439,7 +472,7 @@ AI-ML-Projects/
 ├── Unemployment-Analysis/        # EDA & visualization project (Python Script)
 ├── Car-Price-Prediction/         # Regression & EDA project (Dash Web App)
 ├── Email-Spam-Detection/         # NLP classification project (Streamlit Web App)
-├── MNIST/                        # Deep learning project (TensorFlow CNN — WIP)
+├── MNIST/                        # Deep learning project (TensorFlow CNN)
 └── README.md                     # ← You are here
 ```
 
