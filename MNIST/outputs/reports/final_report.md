@@ -25,7 +25,7 @@ This project built, optimized, evaluated, and deployed an end-to-end Deep Convol
 ---
 
 ## 3. Error Analysis Findings
-- Validation Accuracy achieved: **99.62%** (Error Rate: **2.00%**).
+- Validation Accuracy achieved: **99.62%** (Error Rate: **91.19%**).
 - **Top Confused Digit Pairs**:
   1. Digit 7 misclassified as 2 (horizontal stroke & curve similarity)
   2. Digit 9 misclassified as 4 (open top loop ambiguity)
@@ -44,4 +44,4 @@ This project built, optimized, evaluated, and deployed an end-to-end Deep Convol
 ## 5. Generated Artifacts Checklist
 - Kaggle Submission: `outputs/submission.csv` (28,000 rows)
 - Saved Models: `models/baseline_model.h5`, `models/advanced_model.h5`, `models/best_model.h5`
-- Plots: `outputs/plots/training_curves.png`, `outputs/plots/confusion_matrices_comparison.png`, `outputs/plots/misclassified_top20.png`, `outputs/plots/top_confused_digit_pairs.png`, `outputs/plots/feature_maps_conv1.png`
+- Plots: `outputs/plots/training_curves.png`, `outputs/plots/confusion_matrices_comparison.png`, `outputs/plots/misclassified_top20.png`, `outputs/plots/top_confused_digit_pairs.png`, `outputs/plots/feature_maps_conv1.png`   
