@@ -4,6 +4,10 @@ matplotlib
 seaborn
 scikit-learn
 tensorflow
+streamlit>=1.30.0
+streamlit-drawable-canvas>=0.13.0
+Pillow>=9.0.0
 jupyter
 notebook
 kaggle
+
