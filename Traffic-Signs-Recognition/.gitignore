@@ -1,0 +1,44 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+.env/
+
+# Data & Datasets
+data/
+data/**
+GTSRB*
+
+# Models & Checkpoints
+models/
+*.h5
+*.keras
+*.pb
+*.pth
+*.tflite
+*.onnx
+
+# Output Plots & Graphs
+outputs/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# macOS / OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editor Files
+.vscode/
+.idea/

@@ -1,0 +1,36 @@
+# Root .gitignore for AI-ML-Projects repository
+
+# Virtual Environments
+**/venv/
+**/.venv/
+**/env/
+**/.env/
+
+# Datasets & Data Folders
+**/data/
+**/*.zip
+**/*.tar.gz
+**/*.csv
+
+# Models & Weights
+**/models/
+**/*.h5
+**/*.keras
+**/*.pb
+**/*.pth
+**/*.onnx
+**/*.tflite
+
+# Output Graphs & Plots
+**/outputs/
+
+# Python & Jupyter Caches
+**/__pycache__/
+**/*.py[cod]
+**/.ipynb_checkpoints/
+**/.pytest_cache/
+
+# OS Metadata
+**/.DS_Store
+**/.DS_Store?
+**/._*
