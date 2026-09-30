@@ -280,12 +280,201 @@ def show_upload_predict():
         """)
 
 def show_batch_testing():
+    # 1. Header
     st.title("🖼️ Batch Testing")
-    st.info("Content coming in next phase...")
+    st.markdown("Run the model on multiple random test images at once and see how it performs.")
+    st.divider()
+
+    # 2. Check if test data is available
+    test_dir = 'data/Test'
+    test_csv = 'data/Test.csv'
+    
+    if not (os.path.exists(test_dir) and os.path.exists(test_csv)):
+        st.warning("""
+        ⚠️ Batch testing requires the GTSRB Test folder and Test.csv file. 
+        Please ensure 'data/Test/' and 'data/Test.csv' exist.
+        """)
+        return
+
+    # 3. Controls row
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        num_samples = st.slider(
+            "Number of random images to test:",
+            min_value=4, max_value=16, value=8, step=4
+        )
+    
+    with col2:
+        st.write("")
+        st.write("")
+        run_batch = st.button("🎲 Run Batch Test", type="primary", use_container_width=True)
+
+    # 4. On button click, run batch prediction
+    if run_batch:
+        with st.spinner(f"Testing {num_samples} random images..."):
+            test_df = pd.read_csv(test_csv)
+            sample_rows = test_df.sample(n=num_samples, random_state=None)
+            
+            results = []
+            for idx, row in sample_rows.iterrows():
+                img_rel_path = str(row['Path']).replace('\\', '/')
+                img_path = os.path.join('data', img_rel_path)
+                true_class = int(row['ClassId'])
+                
+                img = cv2.imread(img_path)
+                if img is None:
+                    continue
+                img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                img_resized = cv2.resize(img_rgb, (32, 32))
+                img_norm = img_resized.astype('float32') / 255.0
+                img_batch = np.expand_dims(img_norm, axis=0)
+                
+                pred_probs = model.predict(img_batch, verbose=0)[0]
+                pred_class = int(np.argmax(pred_probs))
+                confidence = float(np.max(pred_probs) * 100)
+                
+                results.append({
+                    'image': img_rgb,
+                    'true_class': true_class,
+                    'pred_class': pred_class,
+                    'confidence': confidence,
+                    'correct': (true_class == pred_class)
+                })
+            
+            st.session_state['batch_results'] = results
+
+    # 5. Display results if available in session state
+    if 'batch_results' in st.session_state:
+        results = st.session_state['batch_results']
+        
+        correct_count = sum(r['correct'] for r in results)
+        total_count = len(results)
+        accuracy_pct = (correct_count / total_count) * 100 if total_count > 0 else 0
+        
+        st.divider()
+        
+        # Summary metrics
+        m1, m2, m3 = st.columns(3)
+        m1.metric("✅ Correct", f"{correct_count}/{total_count}")
+        m2.metric("📊 Batch Accuracy", f"{accuracy_pct:.1f}%")
+        m3.metric("🎲 Sample Size", total_count)
+        
+        st.divider()
+        
+        # Display images in a grid — 4 per row
+        st.subheader("📷 Prediction Results")
+        
+        num_cols = 4
+        rows_needed = (len(results) + num_cols - 1) // num_cols
+        
+        for row_idx in range(rows_needed):
+            cols = st.columns(num_cols)
+            for col_idx in range(num_cols):
+                result_idx = row_idx * num_cols + col_idx
+                if result_idx < len(results):
+                    r = results[result_idx]
+                    with cols[col_idx]:
+                        st.image(r['image'], use_column_width=True)
+                        
+                        true_name = class_names[r['true_class']]
+                        pred_name = class_names[r['pred_class']]
+                        
+                        if r['correct']:
+                            st.success(f"✅ {pred_name}")
+                        else:
+                            st.error(f"❌ {pred_name}")
+                            st.caption(f"Actual: {true_name}")
+                        
+                        st.caption(f"Confidence: {r['confidence']:.1f}%")
+    else:
+        st.info("👆 Click **Run Batch Test** above to see predictions on random test images.")
 
 def show_model_performance():
+    # 1. Header
     st.title("📊 Model Performance")
-    st.info("Content coming in next phase...")
+    st.markdown("Training results and evaluation metrics from the model training notebook.")
+    st.divider()
+
+    # 2. Check if outputs directory exists
+    outputs_dir = 'outputs'
+    if not os.path.exists(outputs_dir):
+        st.warning("⚠️ Outputs folder not found. Run the training notebook first to generate evaluation charts.")
+        return
+
+    # 3. Helper function to safely display an image
+    def show_chart(filename, caption):
+        path = os.path.join(outputs_dir, filename)
+        if os.path.exists(path):
+            st.image(path, caption=caption, use_column_width=True)
+        else:
+            st.info(f"Chart not found: {filename}")
+
+    # 4. Tabbed layout for organized viewing
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📈 Training History", 
+        "🔲 Confusion Matrix",
+        "📋 Classification Report",
+        "❌ Error Analysis"
+    ])
+    
+    with tab1:
+        st.subheader("Training & Validation Curves")
+        show_chart('04_training_curves.png', 'Accuracy and Loss over training epochs')
+        
+        st.markdown("""
+        **How to read this:**
+        - If training and validation lines stay close together, the model generalizes well (low overfitting)
+        - A growing gap between them indicates overfitting
+        """)
+    
+    with tab2:
+        st.subheader("Confusion Matrix — Test Set")
+        show_chart('05_confusion_matrix.png', 'Predicted vs Actual class for all 43 categories')
+        
+        st.markdown("""
+        **How to read this:**
+        - Diagonal cells = correct predictions
+        - Off-diagonal cells = misclassifications between classes
+        - Darker diagonal = stronger overall performance
+        """)
+    
+    with tab3:
+        st.subheader("Per-Class F1 Scores")
+        show_chart('06_f1_per_class.png', 'F1-Score for each of the 43 traffic sign classes')
+        
+        st.markdown("""
+        **Color coding:**
+        - 🟢 Green: F1-Score > 0.95 (excellent)
+        - 🟠 Orange: F1-Score 0.90-0.95 (good)
+        - 🔴 Red: F1-Score < 0.90 (needs attention)
+        """)
+    
+    with tab4:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Misclassified Examples")
+            show_chart('07_misclassified.png', 'Sample images the model got wrong')
+        with col2:
+            st.subheader("Live Prediction Samples")
+            show_chart('08_live_predictions.png', 'Random test predictions with confidence')
+
+    # 5. Below tabs — Dataset distribution reference
+    st.divider()
+    st.subheader("📊 Dataset Class Distribution")
+    show_chart('01_class_distribution.png', 'Number of training images per class')
+    
+    st.caption("""
+    💡 Classes with fewer training images may show lower accuracy — 
+    this is a known limitation addressed via data augmentation during training.
+    """)
+
+    # 6. Final footer
+    st.divider()
+    st.info("""
+    📌 **Note:** These charts are generated from the training notebook (`Traffic_Signs.ipynb`). 
+    Re-run the notebook and refresh this page to see updated results after retraining.
+    """)
 
 # ==============================================================================
 # 6. Sidebar Component & Controls
