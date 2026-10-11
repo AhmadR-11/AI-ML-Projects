@@ -5,7 +5,6 @@ Greedy Best-First) across diverse environments (percolation mazes, spanning tree
 mazes, concave trap pockets, and multi-cost terrain).
 """
 
-import base64
 import hashlib
 import pathlib
 import sys
@@ -15,6 +14,7 @@ from matplotlib.figure import Figure
 import pandas as pd
 import streamlit as st
 
+from src import ui_bench
 from src.algorithms import ALGORITHM_INFO, SearchResult
 from src.animator import (
     build_search_log,
@@ -47,6 +47,7 @@ from src.app_logic import (
 )
 from src.benchmark import AlgoConfig, default_algorithm_configs
 from src.grid import Grid
+from src.ui_common import inject_css, show_gif, stretch
 from src.visualizer import (
     plot_comparison,
     plot_result,
@@ -65,36 +66,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-css_file = pathlib.Path("assets/style.css")
-if css_file.exists():
-    css_text = css_file.read_text(encoding="utf-8").strip()
-    if css_text:
-        st.markdown(f"<style>{css_text}</style>", unsafe_allow_html=True)
+inject_css("assets/style.css")
 
 
 # =====================================================================
-# PART B2 — Compatibility & Display Helpers
-# =====================================================================
-
-def stretch(fn: Any, *args: Any, **kwargs: Any) -> Any:
-    """Invoke Streamlit element layout with stretch width falling back gracefully."""
-    try:
-        return fn(*args, width="stretch", **kwargs)
-    except (TypeError, ValueError, st.errors.StreamlitAPIException):
-        return fn(*args, use_container_width=True, **kwargs)
-
-
-def show_gif(gif_bytes: bytes, max_width: int = 900) -> None:
-    """Render in-memory animated GIF using an HTML base64 data URI."""
-    b64 = base64.b64encode(gif_bytes).decode("ascii")
-    st.markdown(
-        f'<img src="data:image/gif;base64,{b64}" style="width: 100%; max-width: {max_width}px; border-radius: 6px;">',
-        unsafe_allow_html=True,
-    )
-
-
-# =====================================================================
-# PART B3 — Cached Execution Wrappers
+# PART B2 — Cached Execution Wrappers
 # =====================================================================
 
 @st.cache_data(show_spinner=False, max_entries=128)
@@ -677,32 +653,14 @@ def render_compare(grid: Grid, spec: GridSpec, allow_diagonal: bool) -> None:
 # PART B8 — Benchmark and Insights Placeholder Pages
 # =====================================================================
 
-def render_benchmark() -> None:
-    """Render placeholder for the upcoming Benchmark suite page."""
-    st.header("📊 Benchmark Suite")
-    st.info(
-        "The automated benchmark runner and multi-scenario performance charts arrive in the next phase. "
-        "This page will display sweeping experiments across obstacle densities, grid sizes, and maze topologies "
-        "with statistical runtimes and winner distributions."
-    )
-
-
-def render_insights() -> None:
-    """Render placeholder for the upcoming Insights deep-dive page."""
-    st.header("💡 Algorithmic Insights")
-    st.info(
-        "The interactive insights and trade-off exploration engine arrives in the next phase. "
-        "This page will provide deep-dive analysis on heuristic admissibility, step vs. cost divergence, "
-        "and frontier memory efficiency."
-    )
-
-
 # =====================================================================
-# PART B9 — Main Application Router
+# PART B8 — Main Application Router
 # =====================================================================
 
 def main() -> None:
     """Application entrypoint."""
+    st.session_state.setdefault("bench_active", None)
+
     spec, allow_diagonal = render_sidebar()
     grid = ensure_maze(spec)
 
@@ -712,9 +670,9 @@ def main() -> None:
     elif active_page == "⚖️ Compare":
         render_compare(grid=grid, spec=spec, allow_diagonal=allow_diagonal)
     elif active_page == "📊 Benchmark":
-        render_benchmark()
+        ui_bench.render_benchmark_page()
     elif active_page == "💡 Insights":
-        render_insights()
+        ui_bench.render_insights_page()
     else:
         render_playground(grid=grid, spec=spec, allow_diagonal=allow_diagonal)
 

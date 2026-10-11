@@ -107,7 +107,64 @@ def main() -> None:
     at.sidebar.radio(key="page").set_value("💡 Insights").run()
     assert_no_exception(at, "Scenario 10: Insights page")
 
-    print("\nAll Phase 7 smoke tests passed!")
+    print("\nAll Phase 7 smoke tests passed!\n")
+
+    # Scenario 11: Benchmark page, source "Run quick suite"
+    print("11. Testing Benchmark page 'Run quick suite' execution...")
+    at.sidebar.radio(key="page").set_value("📊 Benchmark").run()
+    assert not at.exception
+    at.selectbox(key="bm_source").select("Run quick suite").run()
+    assert not at.exception
+    at.button(key="bm_run").click().run()
+    assert not at.exception
+    bench_active = at.session_state.get("bench_active")
+    from src.benchmark import BenchmarkResult
+
+    assert isinstance(bench_active, BenchmarkResult), "bench_active must be a BenchmarkResult"
+    assert (
+        bench_active.meta.get("suite") == "quick"
+    ), f"Expected suite 'quick', got {bench_active.meta.get('suite')}"
+    assert len(at.dataframe) >= 1, f"Expected at least one dataframe, got {len(at.dataframe)}"
+
+    # Scenario 12: Cycle key="bm_chart" through all 6 options
+    print("12. Cycling bm_chart through all 6 chart options...")
+    from src.ui_bench import CHART_OPTIONS
+
+    for chart_opt in CHART_OPTIONS:
+        at.selectbox(key="bm_chart").select(chart_opt).run()
+        assert not at.exception
+
+    # Scenario 13: Set key="bm_cats" to ["trap"] and then to []
+    print("13. Adjusting category filters bm_cats...")
+    at.multiselect(key="bm_cats").set_value(["trap"]).run()
+    assert not at.exception
+    at.multiselect(key="bm_cats").set_value([]).run()
+    assert not at.exception
+
+    # Scenario 14: Insights page after the run
+    print("14. Navigating to Insights page after benchmark run...")
+    at.sidebar.radio(key="page").set_value("💡 Insights").run()
+    assert not at.exception
+    assert len(at.metric) >= 4, f"Expected at least 4 metric elements, got {len(at.metric)}"
+    feedback_count = len(at.success) + len(at.info) + len(at.warning)
+    assert feedback_count >= 1, f"Expected at least one success/info/warning element, got {feedback_count}"
+
+    # Scenario 15: A fresh AppTest with st.session_state["bench_active"] = None on Insights page
+    print("15. Testing fresh AppTest on Insights page with bench_active = None...")
+    fresh_at = AppTest.from_file("app.py", default_timeout=180)
+    fresh_at.session_state["bench_active"] = None
+    fresh_at.session_state["page"] = "💡 Insights"
+    fresh_at.run()
+    assert not fresh_at.exception
+
+    # Scenario 16: Upload source selected without a file
+    print("16. Selecting upload source without uploading a file...")
+    at.sidebar.radio(key="page").set_value("📊 Benchmark").run()
+    assert not at.exception
+    at.selectbox(key="bm_source").select("Upload results.csv").run()
+    assert not at.exception
+
+    print("\nAll Phase 8 smoke tests passed!")
 
 
 if __name__ == "__main__":
